@@ -12,13 +12,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Conexão com Firebase (Certifique-se que o arquivo existe na pasta backend)
-const serviceAccount = require("./firebase-key.json");
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
-}
+const path = require('path');
+
+// 🟢 Forma robusta de encontrar o arquivo em qualquer sistema:
+const serviceAccountPath = path.join(__dirname, 'firebase-key.json');
+const serviceAccount = require(serviceAccountPath);
 const db = admin.firestore();
 
 // 🟢 REQUISITO: CRUD - CREATE com Validação no Back-end
