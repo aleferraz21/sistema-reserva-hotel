@@ -1,5 +1,4 @@
-FROM node:18-alpine
-
+FROM node:20-alpine
 WORKDIR /app
 
 # Copia apenas os arquivos de dependências primeiro
