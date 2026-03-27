@@ -12,8 +12,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Faz o build do Vite/React
-RUN npm run build
-
+RUN CI=false npm run build
 # Usa um servidor leve para servir o site
 RUN npm install -g serve
 
