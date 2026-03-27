@@ -12,12 +12,14 @@ app.use((req, res, next) => {
     next();
 });
 
-const path = require('path');
+// Remova a lógica complexa de path e tente o require direto:
+const serviceAccount = require("./firebase-key.json");
 
-// 🟢 Forma robusta de encontrar o arquivo em qualquer sistema:
-const serviceAccountPath = path.join(__dirname, 'firebase-key.json');
-const serviceAccount = require(serviceAccountPath);
-const db = admin.firestore();
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+}
 
 // 🟢 REQUISITO: CRUD - CREATE com Validação no Back-end
 app.post('/reservas', async (req, res) => {

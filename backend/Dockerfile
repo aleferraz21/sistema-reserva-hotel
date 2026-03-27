@@ -1,20 +1,19 @@
-# Usa a imagem oficial do Node.js
 FROM node:18
 
-# Cria a pasta do app dentro do container
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências
+# Copia os arquivos de pacotes
 COPY package*.json ./
 
 # Instala as dependências
 RUN npm install
 
-# Copia todo o resto do código (incluindo sua firebase-key.json)
+# Copia todo o código da pasta backend para dentro do container
 COPY . .
 
-# Abre a porta 3000 que seu servidor usa
+# 🟢 GARANTIA: Força a permissão de leitura no arquivo da chave
+RUN chmod 644 firebase-key.json
+
 EXPOSE 3000
 
-# Comando para ligar o servidor
 CMD ["node", "index.js"]
