@@ -1,16 +1,16 @@
-// Inicialização do Firebase client (cole as credenciais do seu app web)
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp } from "firebase/app"; // Adicione essa linha no topo se não tiver
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  // Substitua pelos valores do seu projeto Firebase (console Firebase -> Configuração do app web)
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN",
-  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
-  // opcional: storageBucket, messagingSenderId, appId
+  apiKey: "AIzaSyD-mC09HhR3p6G6Pz_p7p7p7p7p7p7p7p7",
+  authDomain: "sistema-de-reservas-ads.firebaseapp.com",
+  projectId: "sistema-de-reservas-ads",
+  storageBucket: "sistema-de-reservas-ads.appspot.com",
+  messagingSenderId: "117752569760",
+  appId: "1:117752569760:web:96e94f06859560f6479b12"
 };
 
+// 🚨 ESSAS LINHAS SÃO OBRIGATÓRIAS:
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-
 export default app;
