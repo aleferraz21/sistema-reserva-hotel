@@ -1,7 +1,23 @@
-FROM node:18
+FROM node:18-alpine
+
 WORKDIR /app
+
+# Copia apenas os arquivos de dependências primeiro
 COPY package*.json ./
-RUN npm install
+
+# 🟢 O SEGREDO: Usar o --legacy-peer-deps para evitar conflitos de versão
+RUN npm install --legacy-peer-deps
+
+# Copia o restante do código
 COPY . .
-EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host"]
+
+# Faz o build do Vite/React
+RUN npm run build
+
+# Usa um servidor leve para servir o site
+RUN npm install -g serve
+
+EXPOSE 8080
+
+# Comando para rodar o site na porta do Render
+CMD ["serve", "-s", "dist", "-l", "8080"]
