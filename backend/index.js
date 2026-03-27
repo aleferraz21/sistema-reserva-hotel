@@ -53,10 +53,15 @@ app.post('/reservas', async (req, res) => {
 // 🟢 REQUISITO: CRUD - READ (Lista completa para Admin)
 app.get('/reservas', async (req, res) => {
     try {
-        const snapshot = await db.collection('reservas').orderBy('createdAt', 'desc').get();
+        const snapshot = await db.collection('reservas').get();
+        // Se estiver vazio, retorna um array vazio [] em vez de erro
+        if (snapshot.empty) {
+            return res.status(200).json([]);
+        }
         const reservas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json(reservas);
     } catch (error) {
+        console.error("Erro no Firebase:", error);
         res.status(500).send({ error: "Erro ao listar reservas." });
     }
 });
@@ -100,3 +105,4 @@ app.delete('/reservas/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
+app.get('/', (req, res) => res.send('API do Grand Hotel Tá funcionando! 🚀'));
