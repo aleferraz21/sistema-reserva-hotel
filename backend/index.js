@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 });
 
 // Remova a lógica complexa de path e tente o require direto:
-const serviceAccount = require("./firebase-key.json");
+const serviceAccount = require('./firebase-key.json');
 
 if (!admin.apps.length) {
     admin.initializeApp({
