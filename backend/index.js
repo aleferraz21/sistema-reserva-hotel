@@ -6,31 +6,47 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// 🟢 REQUISITO: Registro de Logs de Acesso
+// 🟢 REGISTRO DE LOGS (Para você ver no Render)
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} em ${req.url}`);
     next();
 });
 
-// Importação da chave do Firebase
-const serviceAccount = require('./firebase-key.json');
+// 🔐 CONFIGURAÇÃO DO FIREBASE (Segura para Nuvem)
+let serviceAccount;
 
-// Inicialização do Firebase Admin
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
+try {
+    if (process.env.FIREBASE_KEY) {
+        // Se a chave estiver no Environment do Render (Recomendado)
+        serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+        console.log("✅ Usando chave do Firebase via Environment Variable");
+    } else {
+        // Se a chave estiver no arquivo local (Cuidado: GitHub desativa chaves públicas)
+        serviceAccount = require('./firebase-key.json');
+        console.log("⚠️ Usando chave do Firebase via arquivo local");
+    }
+
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+        });
+    }
+} catch (error) {
+    console.error("❌ ERRO AO INICIALIZAR FIREBASE:", error.message);
 }
 
-// 🔥 AJUSTE AQUI: Definindo a variável db para o Firestore
 const db = admin.firestore();
 
-// 🟢 REQUISITO: CRUD - CREATE com Validação no Back-end
+// 🏠 ROTA DE BOAS-VINDAS (Para não dar Cannot GET /)
+app.get('/', (req, res) => {
+    res.send('<h1>API do Grand Hotel Tá funcionando! 🚀</h1>');
+});
+
+// 🟢 CRUD - CREATE (Salvar Reserva)
 app.post('/reservas', async (req, res) => {
     try {
         const { usuario, checkIn, checkOut, tipoQuarto } = req.body;
 
-        // Validação de Campos Obrigatórios
         if (!usuario || !checkIn || !checkOut || !tipoQuarto) {
             return res.status(400).send({ error: "Todos os campos são obrigatórios." });
         }
@@ -45,44 +61,39 @@ app.post('/reservas', async (req, res) => {
         });
         res.status(201).send({ id: docRef.id });
     } catch (error) {
-        console.error("[ERRO NO FIREBASE]:", error);
-        res.status(500).send({ error: "Erro interno ao salvar reserva." });
+        console.error("ERRO AO SALVAR:", error.message);
+        res.status(500).send({ error: "Erro interno", detalhes: error.message });
     }
 });
 
-// 🟢 REQUISITO: CRUD - READ (Lista completa para Admin)
+// 🔵 CRUD - READ (Listar todas)
 app.get('/reservas', async (req, res) => {
     try {
         const snapshot = await db.collection('reservas').get();
-        // Se estiver vazio, retorna um array vazio [] em vez de erro
-        if (snapshot.empty) {
-            return res.status(200).json([]);
-        }
+        if (snapshot.empty) return res.status(200).json([]);
+        
         const reservas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json(reservas);
     } catch (error) {
-        console.error("Erro no Firebase:", error);
-        res.status(500).send({ error: "Erro ao listar reservas." });
+        res.status(500).send({ error: "Erro ao listar reservas.", detalhes: error.message });
     }
 });
 
-// 🟢 REQUISITO: API RESTful (Busca por Hóspede)
+// 🔍 BUSCA POR USUÁRIO
 app.get('/reservas/meu-status/:usuario', async (req, res) => {
     try {
         const nomeBusca = req.params.usuario.toLowerCase();
         const snapshot = await db.collection('reservas').get();
-        
         const filtrados = snapshot.docs
             .map(doc => ({ id: doc.id, ...doc.data() }))
             .filter(r => r.usuario.toLowerCase().includes(nomeBusca));
-
         res.status(200).json(filtrados);
     } catch (error) {
         res.status(500).send({ error: "Erro na pesquisa." });
     }
 });
 
-// 🟢 REQUISITO: CRUD - UPDATE (Aprovação)
+// 🟡 CRUD - UPDATE (Aprovar)
 app.patch('/reservas/:id', async (req, res) => {
     try {
         const { status } = req.body;
@@ -93,7 +104,7 @@ app.patch('/reservas/:id', async (req, res) => {
     }
 });
 
-// 🟢 REQUISITO: CRUD - DELETE
+// 🔴 CRUD - DELETE (Excluir)
 app.delete('/reservas/:id', async (req, res) => {
     try {
         await db.collection('reservas').doc(req.params.id).delete();
@@ -105,4 +116,3 @@ app.delete('/reservas/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
-app.get('/', (req, res) => res.send('API do Grand Hotel Tá funcionando! 🚀'));
