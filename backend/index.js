@@ -12,14 +12,18 @@ app.use((req, res, next) => {
     next();
 });
 
-// Remova a lógica complexa de path e tente o require direto:
+// Importação da chave do Firebase
 const serviceAccount = require('./firebase-key.json');
 
+// Inicialização do Firebase Admin
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount)
     });
 }
+
+// 🔥 AJUSTE AQUI: Definindo a variável db para o Firestore
+const db = admin.firestore();
 
 // 🟢 REQUISITO: CRUD - CREATE com Validação no Back-end
 app.post('/reservas', async (req, res) => {
