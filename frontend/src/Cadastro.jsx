@@ -9,7 +9,6 @@ function Cadastro() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Chama API backend para criar usuário no Firebase Auth
     fetch('/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -17,7 +16,6 @@ function Cadastro() {
     }).then(async res => {
       const data = await res.json();
       if (!res.ok) return alert(data.error || 'Erro ao cadastrar');
-      // fallback localStorage para compatibilidade imediata (não recomendado em produção)
       try {
         const users = JSON.parse(localStorage.getItem('usuarios') || '[]');
         users.push({ nome, email, senha, role: 'cliente' });
