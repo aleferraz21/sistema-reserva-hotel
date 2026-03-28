@@ -38,18 +38,16 @@ function Home() {
   };
 
   const roomsData = [
-    { nome: 'Standard', desc: 'Cama queen, Wi‑Fi, TV', preco: 'R$120', tags: [], img: 'https://picsum.photos/seed/standard/800/600' },
-    { nome: 'Luxo', desc: 'Cama king, amenidades premium, café da manhã', preco: 'R$220', tags: ['cafe'], img: 'https://picsum.photos/seed/luxo/800/600' },
-    { nome: 'Hidromassagem', desc: 'Banheira com hidromassagem no quarto', preco: 'R$300', tags: ['hidro', 'cafe'], img: 'https://picsum.photos/seed/hidro/800/600' },
-    { nome: 'VistaMar', desc: 'Varanda com vista para o mar', preco: 'R$350', tags: ['vista', 'cafe'], img: 'https://picsum.photos/seed/vistamar/800/600' },
-    { nome: 'Suíte Presidencial', desc: 'Suíte espaçosa com lounge e serviços VIP', preco: 'R$800', tags: ['piscina', 'cafe'], img: 'https://picsum.photos/seed/presidencial/800/600' }
+    { nome: 'Standard', desc: 'Cama queen, Wi-Fi, TV', preco: 'R$120', tags: [], img: '/images/room-standard.jpg' },
+    { nome: 'Luxo', desc: 'Cama king, amenidades premium, café da manhã', preco: 'R$220', tags: ['cafe'], img: '/images/room-luxo.jpg' },
+    { nome: 'Hidromassagem', desc: 'Banheira com hidromassagem no quarto', preco: 'R$300', tags: ['hidro', 'cafe'], img: '/images/room-hidro.jpg' },
+    { nome: 'VistaMar', desc: 'Varanda com vista para o mar', preco: 'R$350', tags: ['vista', 'cafe'], img: '/images/room-vistamar.jpg' },
+    { nome: 'Suíte Presidencial', desc: 'Suíte espaçosa com lounge e serviços VIP', preco: 'R$800', tags: ['piscina', 'cafe'], img: '/images/room-presidencial.jpg' }
   ];
 
-  // roomsData is used directly for rendering cards
 
   const selectRoom = (name) => {
     setTipoQuarto(name);
-    // scroll to top where the form is
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
