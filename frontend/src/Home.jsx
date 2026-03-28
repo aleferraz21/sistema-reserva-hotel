@@ -29,7 +29,7 @@ function Home() {
   const fazerReserva = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(API_URL, { usuario, checkIn, checkOut, tipoQuarto, hospedes });
+   await axios.post(`${API_URL}/reservas`, { usuario, checkIn, checkOut, tipoQuarto, hospedes });
       alert("✅ Reserva solicitada!");
       setBuscaNome(usuario);
     } catch (err) {
