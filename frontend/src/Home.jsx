@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Home() {
@@ -6,29 +7,29 @@ function Home() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [tipoQuarto, setTipoQuarto] = useState('Standard');
+  const [hospedes, setHospedes] = useState(1);
   const [buscaNome, setBuscaNome] = useState('');
   const [minhasReservas, setMinhasReservas] = useState([]);
+  
 
   const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
-
-  const buscarStatus = useCallback(async () => {
-    if (!buscaNome || buscaNome.length < 3) return;
-    try {
-      // Busca específica por usuário no Render
-      const res = await axios.get(`${API_URL}/meu-status/${buscaNome}`);
-      setMinhasReservas(res.data);
-    } catch (err) { console.error(err); }
-  }, [buscaNome]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => buscarStatus(), 500);
+    const timer = setTimeout(async () => {
+      if (!buscaNome || buscaNome.length < 3) return;
+      try {
+        const res = await axios.get(`${API_URL}/meu-status/${buscaNome}`);
+        setMinhasReservas(res.data);
+      } catch (err) { console.error(err); }
+    }, 500);
     return () => clearTimeout(timer);
-  }, [buscaNome, buscarStatus]);
+  }, [buscaNome]);
 
   const fazerReserva = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(API_URL, { usuario, checkIn, checkOut, tipoQuarto });
+      await axios.post(API_URL, { usuario, checkIn, checkOut, tipoQuarto, hospedes });
       alert("✅ Reserva solicitada!");
       setBuscaNome(usuario);
     } catch (err) {
@@ -36,33 +37,127 @@ function Home() {
     }
   };
 
-  // ... (Mantenha os estilos e o return que já usamos anteriormente)
-  return (
-    <div style={{ padding: '40px', backgroundColor: '#121212', color: 'white', minHeight: '100vh' }}>
-       {/* O conteúdo do HTML permanece o mesmo, focado no formulário e na tabela */}
-       <h1 style={{color: '#d4af37'}}>Grand Hotel - Reservas</h1>
-       <form onSubmit={fazerReserva}>
-          <input placeholder="Seu Nome" value={usuario} onChange={e => setUsuario(e.target.value)} required />
-          <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)} required />
-          <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)} required />
-          <select value={tipoQuarto} onChange={e => setTipoQuarto(e.target.value)}>
-            <option value="Standard">Standard</option>
-            <option value="Luxo">Luxo</option>
-          </select>
-          <button type="submit" style={{backgroundColor: '#d4af37', padding: '10px', marginTop: '10px'}}>Reservar Agora</button>
-       </form>
+  const roomsData = [
+    { nome: 'Standard', desc: 'Cama queen, Wi‑Fi, TV', preco: 'R$120', tags: [], img: 'https://picsum.photos/seed/standard/800/600' },
+    { nome: 'Luxo', desc: 'Cama king, amenidades premium, café da manhã', preco: 'R$220', tags: ['cafe'], img: 'https://picsum.photos/seed/luxo/800/600' },
+    { nome: 'Hidromassagem', desc: 'Banheira com hidromassagem no quarto', preco: 'R$300', tags: ['hidro', 'cafe'], img: 'https://picsum.photos/seed/hidro/800/600' },
+    { nome: 'VistaMar', desc: 'Varanda com vista para o mar', preco: 'R$350', tags: ['vista', 'cafe'], img: 'https://picsum.photos/seed/vistamar/800/600' },
+    { nome: 'Suíte Presidencial', desc: 'Suíte espaçosa com lounge e serviços VIP', preco: 'R$800', tags: ['piscina', 'cafe'], img: 'https://picsum.photos/seed/presidencial/800/600' }
+  ];
 
-       <div style={{marginTop: '40px'}}>
-          <h3>Ver Minhas Reservas</h3>
-          <input placeholder="Digite seu nome para buscar..." value={buscaNome} onChange={e => setBuscaNome(e.target.value)} />
-          <ul>
+  // roomsData is used directly for rendering cards
+
+  const selectRoom = (name) => {
+    setTipoQuarto(name);
+    // scroll to top where the form is
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const styles = {
+    page: { padding: '40px', background: 'linear-gradient(180deg,#071017 0%, #0f1720 100%)', color: '#e6e6e6', minHeight: '100vh', fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto' },
+    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' },
+    title: { color: '#ffd54a', fontSize: '36px', fontWeight: 700, margin: 0 },
+    card: { background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', padding: '22px', borderRadius: '12px', boxShadow: '0 8px 30px rgba(2,6,23,0.6)', border: '1px solid rgba(255,213,74,0.06)' },
+    formGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', alignItems: 'end' },
+    input: { width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', color: '#e6eef8' },
+    select: { width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.25)', color: '#e6eef8' },
+    btnPrimary: { background: 'linear-gradient(90deg,#d4af37,#f3d27a)', color: '#000', border: 'none', padding: '12px 18px', borderRadius: '10px', cursor: 'pointer', fontWeight: 700 },
+    logout: { background: 'transparent', color: '#ff6b6b', border: '1px solid #ff6b6b', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer' },
+    roomList: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px', marginTop: '20px' },
+    roomCard: { padding: '14px', borderRadius: '10px', background: 'linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)' },
+    smallMuted: { color: '#9fb0d3', fontSize: '13px' }
+  };
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const displayUser = currentUser?.nome || currentUser?.email?.split('@')[0] || usuario;
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.header}>
+        <h1 style={styles.title}>Grand Hotel - Reservas</h1>
+        <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+          <div style={{color: '#cbd5e1', marginRight: '8px'}}>Olá, {displayUser}</div>
+          <button onClick={() => navigate('/')} style={styles.logout}>Sair</button>
+        </div>
+      </div>
+
+      <div style={styles.card}>
+        <form onSubmit={fazerReserva}>
+          <div style={styles.formGrid}>
+            <div style={{gridColumn: 'span 1'}}>
+              <label className="label">Seu Nome</label>
+              <input placeholder="Seu Nome" value={usuario} onChange={e => setUsuario(e.target.value)} required style={styles.input} />
+            </div>
+            <div>
+              <label className="label">Check-in</label>
+              <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)} required style={styles.input} />
+            </div>
+            <div>
+              <label className="label">Check-out</label>
+              <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)} required style={styles.input} />
+            </div>
+            <div>
+              <label className="label">Hóspedes</label>
+              <select value={hospedes} onChange={e => setHospedes(Number(e.target.value))} style={styles.select}>
+                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} {n===1? 'hóspede' : 'hóspedes'}</option>)}
+              </select>
+            </div>
+
+            <div style={{gridColumn: 'span 2'}}>
+              <label className="label">Tipo de Quarto</label>
+              <div style={{...styles.select, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <span>{tipoQuarto}</span>
+                <small style={{color: '#9fb0d3'}}>Clique em uma acomodação abaixo</small>
+              </div>
+            </div>
+
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <button type="submit" style={styles.btnPrimary}>Reservar Agora</button>
+            </div>
+          </div>
+        </form>
+
+        <div style={{marginTop: '22px'}}>
+          <h3 style={{margin: 0}}>Explorar Acomodações</h3>
+          <p style={styles.smallMuted}>Use os filtros para encontrar a acomodação ideal.</p>
+
+          <div style={styles.roomList}>
+            {roomsData.map(r => (
+              <div key={r.nome} style={styles.roomCard}>
+                <div style={{height: '120px', borderRadius: '8px', overflow: 'hidden', marginBottom: '10px'}}>
+                  <img src={r.img} alt={r.nome} style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block'}} onError={(e)=>{e.currentTarget.onerror=null; e.currentTarget.src='https://picsum.photos/800/600?random=1'}} />
+                </div>
+                <h4 style={{margin: '4px 0 8px 0'}}>{r.nome}</h4>
+                <div style={{color: '#9fb0d3', fontSize: '13px'}}>{r.desc}</div>
+                <div style={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <div style={{fontWeight: 700}}>{r.preco} / noite</div>
+                  <div style={{display: 'flex', gap: '8px'}}>
+                    <button onClick={() => selectRoom(r.nome)} style={{padding: '8px 12px', borderRadius: '8px', border: 'none', background: '#ffd54a', cursor: 'pointer'}}>Reservar</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{marginTop: '26px'}}>
+        <h3 style={{color: '#ffd54a'}}>Ver Minhas Reservas</h3>
+        <input placeholder="Digite seu nome para buscar..." value={buscaNome} onChange={e => setBuscaNome(e.target.value)} style={{...styles.input, width: '320px'}} />
+        <div style={{marginTop: '12px'}}>
+          {minhasReservas.length === 0 && <div style={styles.smallMuted}>Nenhuma reserva encontrada.</div>}
+          <ul style={{marginTop: '12px'}}>
             {minhasReservas.map(r => (
-              <li key={r.id}>{r.tipoQuarto} - Status: {r.status}</li>
+              <li key={r.id} style={{padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.03)'}}>
+                <strong>{r.usuario}</strong> — {r.tipoQuarto} • {r.hospedes || '1'} hóspede(s) • Status: {r.status}
+              </li>
             ))}
           </ul>
-       </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default Home;
+//coments
