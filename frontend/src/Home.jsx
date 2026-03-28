@@ -116,7 +116,7 @@ function Home() {
 
         <div style={{marginTop: '22px'}}>
           <h3 style={{margin: 0}}>Explorar Acomodações</h3>
-          <p style={styles.smallMuted}>Use os filtros para encontrar a acomodação ideal.</p>
+          <p style={styles.smallMuted}>Selecione o quarto de sua preferência.</p>
 
           <div style={styles.roomList}>
             {roomsData.map(r => (
@@ -138,19 +138,7 @@ function Home() {
         </div>
       </div>
 
-      <div style={{marginTop: '26px'}}>
-        <h3 style={{color: '#ffd54a'}}>Ver Minhas Reservas</h3>
-        <input placeholder="Digite seu nome para buscar..." value={buscaNome} onChange={e => setBuscaNome(e.target.value)} style={{...styles.input, width: '320px'}} />
-        <div style={{marginTop: '12px'}}>
-          {minhasReservas.length === 0 && <div style={styles.smallMuted}>Nenhuma reserva encontrada.</div>}
-          <ul style={{marginTop: '12px'}}>
-            {minhasReservas.map(r => (
-              <li key={r.id} style={{padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.03)'}}>
-                <strong>{r.usuario}</strong> — {r.tipoQuarto} • {r.hospedes || '1'} hóspede(s) • Status: {r.status}
-              </li>
-            ))}
-          </ul>
-        </div>
+    
       </div>
     </div>
   );
