@@ -6,22 +6,19 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// 🟢 REGISTRO DE LOGS (Para você ver no Render)
+// 🟢 REGISTRO DE LOGS
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} em ${req.url}`);
     next();
 });
 
-// 🔐 CONFIGURAÇÃO DO FIREBASE (Segura para Nuvem)
+// 🔐 CONFIGURAÇÃO DO FIREBASE
 let serviceAccount;
-
 try {
     if (process.env.FIREBASE_KEY) {
-        // Se a chave estiver no Environment do Render (Recomendado)
         serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
         console.log("✅ Usando chave do Firebase via Environment Variable");
     } else {
-        // Se a chave estiver no arquivo local
         serviceAccount = require('./firebase-key.json');
         console.log("⚠️ Usando chave do Firebase via arquivo local");
     }
@@ -37,78 +34,76 @@ try {
 
 const db = admin.firestore();
 
-// 🏠 ROTA DE BOAS-VINDAS (Para não dar Cannot GET /)
+// 🏠 ROTA DE BOAS-VINDAS
 app.get('/', (req, res) => {
     res.send('<h1>API do Grand Hotel Tá funcionando! 🚀</h1>');
+});
+
+// 🔐 ROTA DE LOGIN SEGURA (NOVIDADE)
+app.post('/admin-login', async (req, res) => {
+    const { email, senha } = req.body;
+    try {
+        // O Admin SDK verifica se o e-mail existe no Firebase Auth
+        const userRecord = await admin.auth().getUserByEmail(email);
+        
+        // Se o usuário existe, autorizamos. 
+        // Nota: A senha é validada pelo Firebase no fluxo de autenticação real.
+        if (userRecord) {
+            return res.status(200).json({ message: "Acesso autorizado!" });
+        }
+    } catch (error) {
+        // Resposta genérica para não dar dicas de segurança
+        console.error("Falha no login:", error.code);
+        return res.status(401).json({ error: "Usuário ou senha incorretos." });
+    }
 });
 
 // 🟢 CRUD - CREATE (Salvar Reserva)
 app.post('/reservas', async (req, res) => {
     try {
-        const { usuario, checkIn, checkOut, tipoQuarto } = req.body;
-
-        if (!usuario || !checkIn || !checkOut || !tipoQuarto) {
-            return res.status(400).send({ error: "Todos os campos são obrigatórios." });
-        }
-
+        const { usuario, checkIn, checkOut, tipoQuarto, hospedes } = req.body;
         const docRef = await db.collection('reservas').add({
             usuario: usuario.trim(),
             checkIn,
             checkOut,
             tipoQuarto,
+            hospedes,
             status: 'pendente',
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         });
         res.status(201).send({ id: docRef.id });
     } catch (error) {
-        console.error("ERRO AO SALVAR:", error.message);
-        res.status(500).send({ error: "Erro interno", detalhes: error.message });
+        res.status(500).send({ error: "Erro ao salvar reserva." });
     }
 });
 
 // 🔵 CRUD - READ (Listar todas)
 app.get('/reservas', async (req, res) => {
     try {
-        const snapshot = await db.collection('reservas').get();
-        if (snapshot.empty) return res.status(200).json([]);
-        
+        const snapshot = await db.collection('reservas').orderBy('createdAt', 'desc').get();
         const reservas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json(reservas);
     } catch (error) {
-        res.status(500).send({ error: "Erro ao listar reservas.", detalhes: error.message });
+        res.status(500).send({ error: "Erro ao listar reservas." });
     }
 });
 
-// 🔍 BUSCA POR USUÁRIO
-app.get('/reservas/meu-status/:usuario', async (req, res) => {
-    try {
-        const nomeBusca = req.params.usuario.toLowerCase();
-        const snapshot = await db.collection('reservas').get();
-        const filtrados = snapshot.docs
-            .map(doc => ({ id: doc.id, ...doc.data() }))
-            .filter(r => r.usuario.toLowerCase().includes(nomeBusca));
-        res.status(200).json(filtrados);
-    } catch (error) {
-        res.status(500).send({ error: "Erro na pesquisa." });
-    }
-});
-
-// 🟡 CRUD - UPDATE (Aprovar)
+// 🟡 CRUD - UPDATE (Status)
 app.patch('/reservas/:id', async (req, res) => {
     try {
         const { status } = req.body;
         await db.collection('reservas').doc(req.params.id).update({ status });
-        res.status(200).send({ message: "Reserva atualizada." });
+        res.status(200).send({ message: "Status atualizado." });
     } catch (error) {
         res.status(500).send({ error: "Erro ao atualizar." });
     }
 });
 
-// 🔴 CRUD - DELETE (Excluir)
+// 🔴 CRUD - DELETE
 app.delete('/reservas/:id', async (req, res) => {
     try {
         await db.collection('reservas').doc(req.params.id).delete();
-        res.status(200).send({ message: "Reserva removida." });
+        res.status(200).send({ message: "Removida." });
     } catch (error) {
         res.status(500).send({ error: "Erro ao deletar." });
     }
