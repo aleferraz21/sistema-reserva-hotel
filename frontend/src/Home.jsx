@@ -156,6 +156,12 @@ function Home() {
     </div>
   );
 }
+<button 
+  onClick={() => navigate('/login')} 
+  style={{ marginTop: '20px', background: 'none', border: 'none', color: '#555', cursor: 'pointer' }}
+>
+  Acesso Administrativo
+</button>
 
 export default Home;
 //coments
