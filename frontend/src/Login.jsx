@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // 1. ADICIONE ESTA LINHA NO TOPO!
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const navigate = useNavigate();
 
-  // 2. SUBSTITUA A FUNÇÃO handleLogin POR ESTA ABAIXO:
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
     
     try {
-      // URL do seu backend no Render
       const API_URL = 'https://backend-grand-hotel.onrender.com';
-      
-      // Enviamos para a rota /admin-login que criamos no index.js
       const res = await axios.post(`${API_URL}/admin-login`, { 
         email: email.trim(), 
         senha: senha.trim() 
@@ -25,35 +22,32 @@ function Login() {
       navigate('/admin');
       
     } catch (error) {
-      // Se o backend responder erro, cai aqui (sem dar dicas do erro)
       console.error("Erro no login:", error.response?.data);
       alert("Usuário ou senha incorretos.");
     }
   };
 
-  // O RESTO DO SEU CÓDIGO (styles e return) CONTINUA IGUAL...
-
-  // Objetos de estilo (CSS-in-JS) para um visual moderno
+  // Objetos de estilo
   const styles = {
     pageBackground: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundColor: '#121212', // Fundo escuro da página
+      backgroundColor: '#121212',
       fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       margin: 0,
       padding: 0
     },
     loginCard: {
-      backgroundColor: '#1e1e1e', // Fundo do card ligeiramente mais claro
+      backgroundColor: '#1e1e1e',
       padding: '40px',
       borderRadius: '12px',
-      boxShadow: '0 8px 30px rgba(0,0,0,0.5)', // Sombra para dar profundidade
+      boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
       width: '100%',
-      maxWidth: '400px', // Largura máxima do card
+      maxWidth: '400px', 
       textAlign: 'center',
-      border: '1px solid #333' // Borda sutil
+      border: '1px solid #333' 
     },
     title: {
       margin: '0 0 10px 0',
@@ -87,13 +81,13 @@ function Login() {
       color: '#fff',
       fontSize: '16px',
       transition: 'border-color 0.3s',
-      outline: 'none' // Remove o contorno padrão
+      outline: 'none'
     },
     inputFocus: {
-      borderColor: '#4caf50' // Cor da borda ao focar (verde)
+      borderColor: '#4caf50' 
     },
     button: {
-      backgroundColor: '#4caf50', // Verde vibrante para o botão principal
+      backgroundColor: '#4caf50', 
       color: 'white',
       border: 'none',
       padding: '12px',
@@ -138,7 +132,7 @@ function Login() {
           <button 
             type="submit" 
             style={styles.button}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#388e3c'} // Verde mais escuro no hover
+            onMouseOver={(e) => e.target.style.backgroundColor = '#388e3c'}
             onMouseOut={(e) => e.target.style.backgroundColor = '#4caf50'}
           >
             Entrar
@@ -152,4 +146,3 @@ function Login() {
 export default Login;
 
 
-//coments
