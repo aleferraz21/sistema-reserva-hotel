@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Admin() {
   const [reservas, setReservas] = useState([]);
   const navigate = useNavigate();
-const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
+  const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
 
   // 1. Função para buscar todas as reservas
   const buscarReservas = useCallback(async () => {
@@ -15,7 +15,7 @@ const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
     } catch (err) {
       console.error("Erro ao buscar reservas:", err);
     }
-  }, []);
+  }, [API_URL]);
 
   useEffect(() => {
     buscarReservas();
@@ -68,7 +68,8 @@ const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
     <div style={styles.container}>
       <div style={styles.header}>
         <h1 style={styles.title}>Painel de Gestão - Grand Hotel</h1>
-        <button onClick={() => navigate('/')} style={styles.btnSair}>Sair</button>
+        {/* AQUI ESTÁ A MUDANÇA: Agora envia para /login */}
+        <button onClick={() => navigate('/login')} style={styles.btnSair}>Sair</button>
       </div>
       <table style={styles.table}>
         <thead>
