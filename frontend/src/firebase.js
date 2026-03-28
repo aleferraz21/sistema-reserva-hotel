@@ -1,17 +1,14 @@
-import { initializeApp } from "firebase/app"; // Adicione essa linha no topo se não tiver
+import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // 1. Adicione esta linha no topo
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD-mC09HhR3p6G6Pz_p7p7p7p7p7p7p7p7",
-  authDomain: "sistema-de-reservas-ads.firebaseapp.com",
-  projectId: "sistema-de-reservas-ads",
-  storageBucket: "sistema-de-reservas-ads.appspot.com",
-  messagingSenderId: "117752569760",
-  appId: "1:117752569760:web:96e94f06859560f6479b12"
+  // ... (suas chaves que já estão lá)
 };
 
-// 🚨 ESSAS LINHAS SÃO OBRIGATÓRIAS:
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const auth = getAuth(app);
+const db = getFirestore(app); // 2. Adicione esta linha aqui
+
+export { auth, db }; // 3. Exportação nomeada para o Admin e Login funcionarem
 export default app;
-// Atualização de interface 2.0
