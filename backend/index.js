@@ -6,13 +6,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// 🟢 REGISTRO DE LOGS
+// REGISTRO DE LOGS
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} em ${req.url}`);
     next();
 });
 
-// 🔐 CONFIGURAÇÃO DO FIREBASE
+//CONFIGURAÇÃO DO FIREBASE
 let serviceAccount;
 try {
     if (process.env.FIREBASE_KEY) {
@@ -34,31 +34,27 @@ try {
 
 const db = admin.firestore();
 
-// 🏠 ROTA DE BOAS-VINDAS
+// ROTA DE BOAS-VINDAS
 app.get('/', (req, res) => {
     res.send('<h1>API do Grand Hotel Tá funcionando! 🚀</h1>');
 });
 
-// 🔐 ROTA DE LOGIN SEGURA (NOVIDADE)
+// ROTA DE LOGIN SEGURA
 app.post('/admin-login', async (req, res) => {
     const { email, senha } = req.body;
     try {
         // O Admin SDK verifica se o e-mail existe no Firebase Auth
         const userRecord = await admin.auth().getUserByEmail(email);
-        
-        // Se o usuário existe, autorizamos. 
-        // Nota: A senha é validada pelo Firebase no fluxo de autenticação real.
         if (userRecord) {
             return res.status(200).json({ message: "Acesso autorizado!" });
         }
     } catch (error) {
-        // Resposta genérica para não dar dicas de segurança
+        // Resposta genérica
         console.error("Falha no login:", error.code);
         return res.status(401).json({ error: "Usuário ou senha incorretos." });
     }
 });
 
-// 🟢 CRUD - CREATE (Salvar Reserva)
 app.post('/reservas', async (req, res) => {
     try {
         const { usuario, checkIn, checkOut, tipoQuarto, hospedes } = req.body;
@@ -77,7 +73,6 @@ app.post('/reservas', async (req, res) => {
     }
 });
 
-// 🔵 CRUD - READ (Listar todas)
 app.get('/reservas', async (req, res) => {
     try {
         const snapshot = await db.collection('reservas').orderBy('createdAt', 'desc').get();
@@ -88,7 +83,6 @@ app.get('/reservas', async (req, res) => {
     }
 });
 
-// 🟡 CRUD - UPDATE (Status)
 app.patch('/reservas/:id', async (req, res) => {
     try {
         const { status } = req.body;
@@ -99,7 +93,6 @@ app.patch('/reservas/:id', async (req, res) => {
     }
 });
 
-// 🔴 CRUD - DELETE
 app.delete('/reservas/:id', async (req, res) => {
     try {
         await db.collection('reservas').doc(req.params.id).delete();
