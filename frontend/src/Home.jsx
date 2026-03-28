@@ -6,7 +6,7 @@ function Home() {
   const [usuario, setUsuario] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  const [tipoQuarto, setTipoQuarto] = useState('Standard');
+  const [tipoQuarto, setTipoQuarto] = useState('');
   const [hospedes, setHospedes] = useState(1);
   const [buscaNome, setBuscaNome] = useState('');
   const [minhasReservas, setMinhasReservas] = useState([]);
@@ -109,7 +109,7 @@ function Home() {
             </div>
 
             <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
-              <button type="submit" style={styles.btnPrimary}>Reservar Agora</button>
+              <button type="submit" style={styles.btnPrimary}>Finalizar Reserva</button>
             </div>
           </div>
         </form>
