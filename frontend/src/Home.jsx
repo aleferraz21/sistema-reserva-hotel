@@ -12,7 +12,7 @@ function Home() {
   const [minhasReservas, setMinhasReservas] = useState([]);
   
 
-  const API_URL = 'https://frontend-grand-hotel.onrender.com';
+  const API_URL = 'https://backend-grand-hotel.onrender.com';
   const navigate = useNavigate();
 
   useEffect(() => {
