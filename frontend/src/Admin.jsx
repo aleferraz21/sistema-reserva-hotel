@@ -7,7 +7,7 @@ function Admin() {
   const navigate = useNavigate();
   const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
 
-  // 1. Função para buscar todas as reservas
+
   const buscarReservas = useCallback(async () => {
     try {
       const res = await axios.get(API_URL);
@@ -21,7 +21,6 @@ function Admin() {
     buscarReservas();
   }, [buscarReservas]);
 
-  // 2. Função para Confirmar/Aprovar
   const atualizarStatus = async (id, novoStatus) => {
     try {
       await axios.patch(`${API_URL}/${id}`, { status: novoStatus });
@@ -33,7 +32,6 @@ function Admin() {
     }
   };
 
-  // 3. Função para Excluir
   const excluirReserva = async (id) => {
     if (window.confirm("Deseja cancelar e excluir esta reserva permanentemente?")) {
       try {
@@ -68,7 +66,6 @@ function Admin() {
     <div style={styles.container}>
       <div style={styles.header}>
         <h1 style={styles.title}>Painel de Gestão - Grand Hotel</h1>
-        {/* AQUI ESTÁ A MUDANÇA: Agora envia para /login */}
         <button onClick={() => navigate('/login')} style={styles.btnSair}>Sair</button>
       </div>
       <table style={styles.table}>
