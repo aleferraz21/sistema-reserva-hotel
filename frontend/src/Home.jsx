@@ -101,7 +101,6 @@ function Home() {
             </div>
 
             <div style={{gridColumn: 'span 2'}}>
-              <label className="label">Tipo de Quarto</label>
               <div style={{...styles.select, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <span>{tipoQuarto}</span>
                 <small style={{color: '#9fb0d3'}}>Clique em uma acomodação abaixo</small>
