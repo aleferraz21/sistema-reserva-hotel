@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Admin() {
   const [reservas, setReservas] = useState([]);
   const navigate = useNavigate();
-  const API_URL = 'https://sistema-reserva-hotel.onrender.com/admin';
+const API_URL = 'https://backend-grand-hotel.onrender.com/reservas';
 
   // 1. Função para buscar todas as reservas
   const buscarReservas = useCallback(async () => {
