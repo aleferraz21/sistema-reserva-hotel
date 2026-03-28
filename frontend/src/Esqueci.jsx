@@ -50,3 +50,4 @@ function Esqueci() {
 }
 
 export default Esqueci;
+//não conseguir implementar essas funcionalidade mas futuramente irei ajustar
