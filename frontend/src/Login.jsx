@@ -9,11 +9,11 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     
-    // Verificação de credenciais conforme requisito do PDF
-    if (email === 'carlos@ads.com' && senha === 'carlos123') {
-      alert(`Bem-vindo, Administrador Carlos!`);
+    // Verificação de credenciais
+    if (email === 'admin' && senha === 'admin123') {
+      alert(`Bem-vindo, Administrador ${email}!`);
       navigate('/admin');
-    } else if (email === 'alex@teste.com' && senha === '123') {
+    } else if (email === 'usuario.com' && senha === 'usuario123') {
       alert(`Bem-vindo, ${email}!`);
       navigate('/home');
     } else {
