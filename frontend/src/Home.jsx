@@ -127,7 +127,7 @@ function Home() {
                 <h4 style={{margin: '4px 0 8px 0'}}>{r.nome}</h4>
                 <div style={{color: '#9fb0d3', fontSize: '13px'}}>{r.desc}</div>
                 <div style={{marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <div style={{fontWeight: 700}}>{r.preco} / noite</div>
+                  <div style={{fontWeight: 700}}>{r.preco} / Diária</div>
                   <div style={{display: 'flex', gap: '8px'}}>
                     <button onClick={() => selectRoom(r.nome)} style={{padding: '8px 12px', borderRadius: '8px', border: 'none', background: '#ffd54a', cursor: 'pointer'}}>Reservar</button>
                   </div>
