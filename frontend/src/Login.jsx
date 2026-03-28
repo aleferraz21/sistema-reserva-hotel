@@ -10,10 +10,10 @@ function Login() {
     e.preventDefault();
     
     // Verificação de credenciais
-    if (email === 'admin' && senha === 'admin123') {
+    if (email === '@admin' && senha === 'admin123') {
       alert(`Bem-vindo, Administrador ${email}!`);
       navigate('/admin');
-    } else if (email === 'usuario.com' && senha === 'usuario123') {
+    } else if (email === '@usuario.com' && senha === 'usuario123') {
       alert(`Bem-vindo, ${email}!`);
       navigate('/home');
     } else {
