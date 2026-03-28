@@ -6,18 +6,21 @@ function Login() {
   const [senha, setSenha] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     
-    // Verificação de credenciais
-    if (email === 'admin@admin' && senha === 'admin123') {
-      alert(`Bem-vindo, Administrador ${email}!`);
+    try {
+      // 🚀 Substituímos o IF fixo por uma chamada ao SEU BACKEND no Render
+      const API_URL = 'https://backend-grand-hotel.onrender.com';
+      const res = await axios.post(`${API_URL}/admin-login`, { email, senha });
+      
+      alert("✅ Bem-vindo ao sistema!");
       navigate('/admin');
-    } else if (email === 'usuario@usuario.com' && senha === 'usuario123') {
-      alert(`Bem-vindo, ${email}!`);
-      navigate('/home');
-    } else {
-      alert("Login ou Senha Inválidos, Tente Novamente!");
+      
+    } catch (error) {
+      // 🛡️ Aqui a mensagem será genérica, vinda do backend (sem dicas!)
+      console.error("Erro no login:", error.response?.data);
+      alert("Usuário ou senha incorretos.");
     }
   };
 
