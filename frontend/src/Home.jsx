@@ -75,7 +75,6 @@ function Home() {
         <h1 style={styles.title}>Grand Hotel - Reservas</h1>
         <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
           <div style={{color: '#cbd5e1', marginRight: '8px'}}>Olá, {displayUser}</div>
-          <button onClick={() => navigate('/')} style={styles.logout}>Sair</button>
         </div>
       </div>
 
