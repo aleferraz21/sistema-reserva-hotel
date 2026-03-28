@@ -27,7 +27,7 @@ Este é um sistema de gestão e de reservas de hotel, desenvolvido como projeto 
    - `cd backend` -> `npm install` -> `node index.js`
 
 # 🔗 Links do Projeto
-- Site Oficial (Deploy): [sistema-reserva-hotel]
+- Site Oficial (Deploy): (https://sistema-reserva-hotel.onrender.com)
 - Documentação da API: O backend segue o padrão RESTful com as rotas:
   - `POST /reservas` - Cria uma nova reserva.
   - `GET /meu-status/:nome` - Busca reservas por hóspede.
