@@ -17,7 +17,7 @@ function Login() {
       alert(`Bem-vindo, ${email}!`);
       navigate('/home');
     } else {
-      alert("Credenciais inválidas! Tente carlos@ads.com ou alex@teste.com");
+      alert("Login ou Senha Inválidos, Tente Novamente!");
     }
   };
 
