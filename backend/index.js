@@ -21,7 +21,7 @@ try {
         serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
         console.log("✅ Usando chave do Firebase via Environment Variable");
     } else {
-        // Se a chave estiver no arquivo local (Cuidado: GitHub desativa chaves públicas)
+        // Se a chave estiver no arquivo local
         serviceAccount = require('./firebase-key.json');
         console.log("⚠️ Usando chave do Firebase via arquivo local");
     }
