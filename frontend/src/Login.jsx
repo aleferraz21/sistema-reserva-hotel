@@ -1,28 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // 1. ADICIONE ESTA LINHA NO TOPO!
 
 function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const navigate = useNavigate();
 
- const handleLogin = async (e) => {
+  // 2. SUBSTITUA A FUNÇÃO handleLogin POR ESTA ABAIXO:
+  const handleLogin = async (e) => {
     e.preventDefault();
     
     try {
-      // 🚀 Substituímos o IF fixo por uma chamada ao SEU BACKEND no Render
+      // URL do seu backend no Render
       const API_URL = 'https://backend-grand-hotel.onrender.com';
-      const res = await axios.post(`${API_URL}/admin-login`, { email, senha });
       
-      alert("✅ Bem-vindo ao sistema!");
+      // Enviamos para a rota /admin-login que criamos no index.js
+      const res = await axios.post(`${API_URL}/admin-login`, { 
+        email: email.trim(), 
+        senha: senha.trim() 
+      });
+      
+      alert("✅ " + res.data.message);
       navigate('/admin');
       
     } catch (error) {
-      // 🛡️ Aqui a mensagem será genérica, vinda do backend (sem dicas!)
+      // Se o backend responder erro, cai aqui (sem dar dicas do erro)
       console.error("Erro no login:", error.response?.data);
       alert("Usuário ou senha incorretos.");
     }
   };
+
+  // O RESTO DO SEU CÓDIGO (styles e return) CONTINUA IGUAL...
 
   // Objetos de estilo (CSS-in-JS) para um visual moderno
   const styles = {
