@@ -66,7 +66,7 @@ function Admin() {
     <div style={styles.container}>
       <div style={styles.header}>
         <h1 style={styles.title}>Painel de Gestão - Grand Hotel</h1>
-        <button onClick={() => navigate('/login')} style={styles.btnSair}>Sair</button>
+        <button onClick={() => navigate('/login')} style={styles.btnSair}>EXIT</button>
       </div>
       <table style={styles.table}>
         <thead>
