@@ -104,7 +104,7 @@ function Login() {
     <div style={styles.pageBackground}>
       <div style={styles.loginCard}>
         <h2 style={styles.title}>Acessar Sistema</h2>
-        <p style={styles.subtitle}>Gestão de Reservas - ADS Unifor</p>
+        <p style={styles.subtitle}>Gestão de Reservas ADM</p>
         
         <form onSubmit={handleLogin} style={styles.form}>
           <label style={styles.label}>E-mail:</label>
